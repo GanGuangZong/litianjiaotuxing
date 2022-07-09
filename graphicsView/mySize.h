@@ -9,12 +9,12 @@
 #ifndef SKSize_h
 #define SKSize_h
 
-class SKSize {
+class mySize {
     
 public:
-    SKSize();
-    SKSize(double w, double h);
-    ~SKSize();
+    mySize();
+    mySize(double w, double h);
+    ~mySize();
     
     double width;
     double height;

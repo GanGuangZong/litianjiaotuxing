@@ -1,5 +1,5 @@
 #include "widget.h"
-#include "SKTransform.h"
+#include "myTransform.h"
 #include <QMouseEvent>
 #include <QDebug>
 const double PI = 4.0 * atan(1.0);
@@ -7,12 +7,9 @@ Widget::Widget(QWidget *parent)
     : QGraphicsView(parent)
 {
     m_rotate = ( 0 * PI) / 180.0;
-    //setFixedSize(200,200);
     setSceneRect(QRectF(0, 0, 200, 200));
     m_scene = new QGraphicsScene(this);
     m_scene->setSceneRect(QRectF(0, 0, 200, 200));
-    m_scene->addLine(0,-100,0,100);
-    m_scene->addLine(-100,0,100,0);
     this->setScene(m_scene);
     m_item = new QGraphicsPolygonItem();
     m_points = createShape(m_rotate);
@@ -182,7 +179,7 @@ void Widget::computeRectangle(QVector<QPointF> *points, int index, double rotate
     double lineVectorY[3] = {0,1,0};//x轴方向向量
     double lineVectorX[3] = {1,0,0};//x轴方向向量
 
-    SKTransform trans;
+    myTransform trans;
     trans.rotate(rotate);//旋转向量以适应矩形角度
     double *TX = trans.transForm(lineVectorX);//旋转后X轴向量
     double *TY = trans.transForm(lineVectorY);//旋转后Y轴向量
@@ -223,12 +220,12 @@ void Widget::computeRhombus(QVector<QPointF> *points, int index, double rotate)
     QPointF nextP  = points->at((index+1)%4);
 
     double* diagonal1 = getLine(lastP,nextP);
-    SKTransform trans;
+    myTransform trans;
     trans.rotate(PI/2);
     double* diagonal2 = trans.transForm(diagonal1);
     double* normalPoint = normalFoot(diagonal2,actionP);
     actionP = QPoint(normalPoint[0]/normalPoint[2],normalPoint[1]/normalPoint[2]);
-    SKTransform trans2;
+    myTransform trans2;
     trans2.rotate(PI);
     opposetP = trans2.transForm(actionP);
 
@@ -251,12 +248,12 @@ void Widget::computeSquare(QVector<QPointF> *points, int index, double rotate)
 
     double lineVectorY[3] = {0,1,0};//x轴方向向量
     double lineVectorX[3] = {1,0,0};//x轴方向向量
-    SKTransform trans;
+    myTransform trans;
     trans.rotate(rotate);//旋转向量以适应矩形角度
     double *TX = trans.transForm(lineVectorX);//旋转后X轴向量
     double *TY = trans.transForm(lineVectorY);//旋转后Y轴向量
 
-    SKTransform trans1;
+    myTransform trans1;
     trans1.rotate(PI/4);
     double* Line135V = trans1.transForm(TY);
     double* Line45V = trans1.transForm(TX);
@@ -337,7 +334,7 @@ void Widget::computeSquare(QVector<QPointF> *points, int index, double rotate)
     double* middleP = middlePoint(actionP,opposetP);
     QPoint midP(middleP[0]/middleP[2],middleP[1]/middleP[2]);
 
-    SKTransform trans3;
+    myTransform trans3;
     trans3.Translate(-midP.x(),-midP.y());
     trans3.rotate(PI/2);
     trans3.Translate(midP.x(),midP.y());
@@ -362,7 +359,7 @@ void Widget::computeParallelogram(QVector<QPointF> *points, int index, double ro
 
     double* middleP = middlePoint(nextP,lastP);
     QPointF middle(middleP[0]/middleP[2],middleP[1]/middleP[2]);
-    SKTransform trans;
+    myTransform trans;
     trans.Translate(-middle.x(),-middle.y());
     trans.rotate(PI);
     trans.Translate(middle.x(),middle.y());
@@ -382,7 +379,7 @@ void Widget::computeEchelon(QVector<QPointF> *points, int index, double rotate)/
     QPointF nextP  = points->at((index+1)%4);
     double lineVectorX[3] = {1,0,0};
     double lineVectorY[3] = {0,1,0};
-    SKTransform trans;
+    myTransform trans;
     trans.rotate(rotate);//旋转向量以适应矩形角度
     double *TX = trans.transForm(lineVectorX);//旋转后X轴向量
     double *TY = trans.transForm(lineVectorY);//旋转后Y轴向量
@@ -565,7 +562,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
     QPointF P2  = points->at(1);
     double lineVectorX[3] = {1,0,0};
     double lineVectorY[3] = {0,1,0};
-    SKTransform trans;
+    myTransform trans;
     trans.rotate(rotate);//旋转向量以适应矩形角度
     double *TX = trans.transForm(lineVectorX);//旋转后X轴向量
     double *TY = trans.transForm(lineVectorY);//旋转后Y轴向量
@@ -585,7 +582,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
         double* topLine = getLineFromVector(TX,P1);
         double* topLineCenter = VectorOuter(symmetryLine,topLine);
         QPointF TPC(topLineCenter[0]/topLineCenter[2],topLineCenter[1]/topLineCenter[2]);
-        SKTransform trans;
+        myTransform trans;
         trans.Translate(-TPC.x(),-TPC.y());
         trans.rotate(PI);
         trans.Translate(TPC.x(),TPC.y());
@@ -617,7 +614,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
         double* topLine = getLineFromVector(TX,P4);
         double* topLineCenter = VectorOuter(symmetryLine,topLine);
         QPointF TPC(topLineCenter[0]/topLineCenter[2],topLineCenter[1]/topLineCenter[2]);
-        SKTransform trans;
+        myTransform trans;
         trans.Translate(-TPC.x(),-TPC.y());
         trans.rotate(PI);
         trans.Translate(TPC.x(),TPC.y());
@@ -643,7 +640,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
         QPointF PMiddBottomP(previousMiddleBottomP[0]/previousMiddleBottomP[2],previousMiddleBottomP[1]/previousMiddleBottomP[2]);
 
         //上一次的P3点，对称出上一次的p2点。新P2点向上一次底边做垂线，垂足与上一次P2点之差就是P1移动的方向向量
-        SKTransform trans;
+        myTransform trans;
         trans.Translate(-PMiddBottomP.x(),-PMiddBottomP.y());
         trans.rotate(PI);
         trans.Translate(PMiddBottomP.x(),PMiddBottomP.y());
@@ -651,7 +648,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
 
         double* foot = normalFoot(previousBottomLine,P2);
         QPointF footP2(foot[0]/foot[2],foot[1]/foot[2]);
-        SKTransform trans2;
+        myTransform trans2;
         trans2.Translate(footP2.x()-previousP2.x(),footP2.y()-previousP2.y());
         P1 = trans2.transForm(P1);
 
@@ -670,7 +667,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
             double* topLine = getLineFromVector(TX,P4);
             double* topMiddleP = VectorOuter(topLine,symmetry);
             QPointF topMid(topMiddleP[0]/topMiddleP[2],topMiddleP[1]/topMiddleP[2]);
-            SKTransform trans;
+            myTransform trans;
             trans.Translate(-topMid.x(),-topMid.y());
             trans.rotate(PI);
             trans.Translate(topMid.x(),topMid.y());
@@ -697,14 +694,14 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
             QPointF P2FootP(P2Foot[0]/P2Foot[2],P2Foot[1]/P2Foot[2]);
             QPointF P3FootP(P3Foot[0]/P3Foot[2],P3Foot[1]/P3Foot[2]);
 
-            SKTransform trans;
+            myTransform trans;
             trans.Translate(P2FootP.x()-P3FootP.x(),P2FootP.y()-P3FootP.y());
             P3 = trans.transForm(P3);
 
             double* bottomLine = getLineFromVector(TX,P2);
             double* bottomMiddP = VectorOuter(bottomLine,symmetry);
             QPointF bottomMid(bottomMiddP[0]/bottomMiddP[2],bottomMiddP[1]/bottomMiddP[2]);
-            SKTransform trans2;
+            myTransform trans2;
             trans2.Translate(-bottomMid.x(),-bottomMid.y());
             trans2.rotate(PI);
             trans2.Translate(bottomMid.x(),bottomMid.y());
@@ -733,14 +730,14 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
                 QPointF P2FootP(P2Foot[0]/P2Foot[2],P2Foot[1]/P2Foot[2]);
                 QPointF P3FootP(P3Foot[0]/P3Foot[2],P3Foot[1]/P3Foot[2]);
 
-                SKTransform trans;
+                myTransform trans;
                 trans.Translate(P2FootP.x()-P3FootP.x(),P2FootP.y()-P3FootP.y());
                 P3 = trans.transForm(P3);
 
                 double* bottomLine = getLineFromVector(TX,P2);
                 double* bottomMiddP = VectorOuter(bottomLine,symmetry);
                 QPointF bottomMid(bottomMiddP[0]/bottomMiddP[2],bottomMiddP[1]/bottomMiddP[2]);
-                SKTransform trans2;
+                myTransform trans2;
                 trans2.Translate(-bottomMid.x(),-bottomMid.y());
                 trans2.rotate(PI);
                 trans2.Translate(bottomMid.x(),bottomMid.y());
@@ -763,7 +760,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
                 double* topLine = getLineFromVector(TX,P4);
                 double* topMiddleP = VectorOuter(topLine,symmetry);
                 QPointF topMid(topMiddleP[0]/topMiddleP[2],topMiddleP[1]/topMiddleP[2]);
-                SKTransform trans;
+                myTransform trans;
                 trans.Translate(-topMid.x(),-topMid.y());
                 trans.rotate(PI);
                 trans.Translate(topMid.x(),topMid.y());
@@ -814,7 +811,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
         QPointF PMiddBottomP(previousMiddleBottomP[0]/previousMiddleBottomP[2],previousMiddleBottomP[1]/previousMiddleBottomP[2]);
 
         //上一次的P3点，对称出上一次的p2点。新P2点向上一次底边做垂线，垂足与上一次P2点之差就是P1移动的方向向量
-        SKTransform trans;
+        myTransform trans;
         trans.Translate(-PMiddBottomP.x(),-PMiddBottomP.y());
         trans.rotate(PI);
         trans.Translate(PMiddBottomP.x(),PMiddBottomP.y());
@@ -822,7 +819,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
 
         double* foot = normalFoot(previousBottomLine,P3);
         QPointF footP3(foot[0]/foot[2],foot[1]/foot[2]);
-        SKTransform trans2;
+        myTransform trans2;
         trans2.Translate(footP3.x()-previousP3.x(),footP3.y()-previousP3.y());
         P4 = trans2.transForm(P4);
 
@@ -841,7 +838,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
             double* topLine = getLineFromVector(TX,P1);
             double* topMiddleP = VectorOuter(topLine,symmetry);
             QPointF topMid(topMiddleP[0]/topMiddleP[2],topMiddleP[1]/topMiddleP[2]);
-            SKTransform trans;
+            myTransform trans;
             trans.Translate(-topMid.x(),-topMid.y());
             trans.rotate(PI);
             trans.Translate(topMid.x(),topMid.y());
@@ -868,14 +865,14 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
             QPointF P2FootP(P2Foot[0]/P2Foot[2],P2Foot[1]/P2Foot[2]);
             QPointF P3FootP(P3Foot[0]/P3Foot[2],P3Foot[1]/P3Foot[2]);
 
-            SKTransform trans;
+            myTransform trans;
             trans.Translate(P3FootP.x()-P2FootP.x(),P3FootP.y()-P2FootP.y());
             P2 = trans.transForm(P2);
 
             double* bottomLine = getLineFromVector(TX,P3);
             double* bottomMiddP = VectorOuter(bottomLine,symmetry);
             QPointF bottomMid(bottomMiddP[0]/bottomMiddP[2],bottomMiddP[1]/bottomMiddP[2]);
-            SKTransform trans2;
+            myTransform trans2;
             trans2.Translate(-bottomMid.x(),-bottomMid.y());
             trans2.rotate(PI);
             trans2.Translate(bottomMid.x(),bottomMid.y());
@@ -904,14 +901,14 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
                 QPointF P2FootP(P2Foot[0]/P2Foot[2],P2Foot[1]/P2Foot[2]);
                 QPointF P3FootP(P3Foot[0]/P3Foot[2],P3Foot[1]/P3Foot[2]);
 
-                SKTransform trans;
+                myTransform trans;
                 trans.Translate(P3FootP.x()-P2FootP.x(),P3FootP.y()-P2FootP.y());
                 P2 = trans.transForm(P2);
 
                 double* bottomLine = getLineFromVector(TX,P3);
                 double* bottomMiddP = VectorOuter(bottomLine,symmetry);
                 QPointF bottomMid(bottomMiddP[0]/bottomMiddP[2],bottomMiddP[1]/bottomMiddP[2]);
-                SKTransform trans2;
+                myTransform trans2;
                 trans2.Translate(-bottomMid.x(),-bottomMid.y());
                 trans2.rotate(PI);
                 trans2.Translate(bottomMid.x(),bottomMid.y());
@@ -934,7 +931,7 @@ void Widget::computeEqualEchelon(QVector<QPointF> *points, int index, double rot
                 double* topLine = getLineFromVector(TX,P1);
                 double* topMiddleP = VectorOuter(topLine,symmetry);
                 QPointF topMid(topMiddleP[0]/topMiddleP[2],topMiddleP[1]/topMiddleP[2]);
-                SKTransform trans;
+                myTransform trans;
                 trans.Translate(-topMid.x(),-topMid.y());
                 trans.rotate(PI);
                 trans.Translate(topMid.x(),topMid.y());
@@ -990,7 +987,7 @@ void Widget::computeOrthometricEchelon(QVector<QPointF> *points, int index, doub
 
     double lineVectorX[3] = {1,0,0};
     double lineVectorY[3] = {0,1,0};
-    SKTransform trans;
+    myTransform trans;
     trans.rotate(rotate);//旋转向量以适应矩形角度
     double *TX = trans.transForm(lineVectorX);//旋转后X轴向量
     double *TY = trans.transForm(lineVectorY);//旋转后Y轴向量
@@ -1313,7 +1310,7 @@ QVector<QPointF> *Widget::createRhombus(double rotate)
     points->push_back(p);
     double* middle = middlePoint(points->at(0),points->at(2));
     m_scene->addEllipse(middle[0], middle[1], 1, 1);
-    SKTransform trans;
+    myTransform trans;
     trans.Translate(-middle[0],-middle[1]);
     trans.rotate(rotate);
     trans.Translate(middle[0],middle[1]);
@@ -1338,7 +1335,7 @@ QVector<QPointF> *Widget::createRect(double rotate)
     points->push_back(p);
     double* middle = middlePoint(points->at(0),points->at(2));
     m_scene->addEllipse(middle[0], middle[1], 1, 1);
-    SKTransform trans;
+    myTransform trans;
     trans.Translate(-middle[0],-middle[1]);
     trans.rotate(rotate);
     trans.Translate(middle[0],middle[1]);
@@ -1363,7 +1360,7 @@ QVector<QPointF> *Widget::createSquare(double rotate)
     points->push_back(p);
     double* middle = middlePoint(points->at(0),points->at(2));
     m_scene->addEllipse(middle[0], middle[1], 1, 1);
-    SKTransform trans;
+    myTransform trans;
     trans.Translate(-middle[0],-middle[1]);
     trans.rotate(rotate);
     trans.Translate(middle[0],middle[1]);
@@ -1388,7 +1385,7 @@ QVector<QPointF> *Widget::createParallelogram(double rotate)
     points->push_back(p);
     double* middle = middlePoint(points->at(0),points->at(2));
     m_scene->addEllipse(middle[0], middle[1], 1, 1);
-    SKTransform trans;
+    myTransform trans;
     trans.Translate(-middle[0],-middle[1]);
     trans.rotate(rotate);
     trans.Translate(middle[0],middle[1]);
@@ -1412,7 +1409,7 @@ QVector<QPointF> *Widget::createEchelon(double rotate)
     points->push_back(p);
     double* middle = middlePoint(points->at(0),points->at(2));
     m_scene->addEllipse(middle[0], middle[1], 1, 1);
-    SKTransform trans;
+    myTransform trans;
     trans.Translate(-middle[0],-middle[1]);
     trans.rotate(rotate);
     trans.Translate(middle[0],middle[1]);
@@ -1433,7 +1430,7 @@ QVector<QPointF> *Widget::createEqualEchelon(double rotate)
     points->push_back(p);
     double* middle = middlePoint(points->at(0),points->at(2));
     m_scene->addEllipse(middle[0], middle[1], 1, 1);
-    SKTransform trans;
+    myTransform trans;
     trans.Translate(-middle[0],-middle[1]);
     trans.rotate(rotate);
     trans.Translate(middle[0],middle[1]);
@@ -1454,7 +1451,7 @@ QVector<QPointF> *Widget::createOrthometricEchelon(double rotate)
     points->push_back(p);
     double* middle = middlePoint(points->at(0),points->at(2));
     m_scene->addEllipse(middle[0], middle[1], 1, 1);
-    SKTransform trans;
+    myTransform trans;
     trans.Translate(-middle[0],-middle[1]);
     trans.rotate(rotate);
     trans.Translate(middle[0],middle[1]);

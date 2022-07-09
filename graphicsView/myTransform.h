@@ -3,11 +3,11 @@
 #include <QPointF>
 
 
-class SKTransform
+class myTransform
 {
 public:
-	SKTransform();
-	~SKTransform();
+    myTransform();
+    ~myTransform();
 	void Translate(double dx, double dy);
 	void Scale(double sx, double sy);
 	void rotate(double angle);

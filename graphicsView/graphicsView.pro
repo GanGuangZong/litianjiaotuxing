@@ -12,16 +12,17 @@ DESTDIR = $$PWD/bin
 #LIBS += -L $$PWD/bin/-lEeoShapeKit
 
 SOURCES += \
-    SKTransform.cpp \
+    myTransform.cpp \
     main.cpp \
     myitem.cpp \
-    widget.cpp
+    widget.cpp \
+    mySize.cpp \
 
 HEADERS += \
-    EEOBridgeClass.h \
-    SKTransform.h \
+    myTransform.h \
     myitem.h \
-    widget.h
+    widget.h \
+    mySize.h \
 
 
 

@@ -6,17 +6,17 @@
 //  Copyright © 2021 侯嘉晖. All rights reserved.
 //
 
-#include "SKSize.h"
+#include "mySize.h"
 
-SKSize::SKSize() {
+mySize::mySize() {
     width = 0;
     height = 0;
 }
-SKSize::SKSize(double w, double h) {
+mySize::mySize(double w, double h) {
     width = w;
     height = h;
 }
 
-SKSize::~SKSize() {
+mySize::~mySize() {
     
 }

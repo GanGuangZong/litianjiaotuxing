@@ -1,22 +1,22 @@
-#include "SKTransform.h"
+#include "myTransform.h"
 #include <math.h>
 #include <QVector>
 
-SKTransform::SKTransform()
+myTransform::myTransform()
 {
 }
 
-SKTransform::~SKTransform()
+myTransform::~myTransform()
 {
 }
 
-void SKTransform::Translate(double dx, double dy)
+void myTransform::Translate(double dx, double dy)
 {
     double transM[3][3] = { {1,0,0}, {0,1,0}, {dx,dy,1} };
     matrixMulti(transM);
 }
 
-void SKTransform::Scale(double sx, double sy)
+void myTransform::Scale(double sx, double sy)
 {
 	double scaleM[3][3] = {{sx,0,0}
 						  ,{0,sy,0}
@@ -24,7 +24,7 @@ void SKTransform::Scale(double sx, double sy)
 	matrixMulti(scaleM);
 }
 
-void SKTransform::rotate(double angle)
+void myTransform::rotate(double angle)
 {
 	double rotateM[3][3] = { {cos(angle),-sin(angle),0}
 							,{sin(angle),cos(angle),0}
@@ -32,7 +32,7 @@ void SKTransform::rotate(double angle)
     matrixMulti(rotateM);
 }
 
-void SKTransform::symmetry(double l[])
+void myTransform::symmetry(double l[])
 {
     double rotateM[3][3] = { {1-2*l[0]*l[0],-2*l[0]*l[1],0}
                             ,{-2*l[0]*l[1],1-2*l[1]*l[1],0}
@@ -40,7 +40,7 @@ void SKTransform::symmetry(double l[])
     matrixMulti(rotateM);
 }
 
-void SKTransform::transForm(QVector<QPointF>* points)
+void myTransform::transForm(QVector<QPointF>* points)
 {
     QVector<QPointF>::iterator it;
 	for (it = points->begin(); it != points->end(); it++)
@@ -53,7 +53,7 @@ void SKTransform::transForm(QVector<QPointF>* points)
 	}
 }
 
-QPointF SKTransform::transForm(QPointF p)
+QPointF myTransform::transForm(QPointF p)
 {
         double vp[3] = { p.x(),p.y(),1 };
         double np[3];
@@ -63,14 +63,14 @@ QPointF SKTransform::transForm(QPointF p)
         return p;
 }
 
-double* SKTransform::transForm(double v1[])
+double* myTransform::transForm(double v1[])
 {
     double* nv = new double[3];
     matrixMultiVector(v1, nv);
     return nv;
 }
 
-void SKTransform::matrixMulti(double m1[][3])
+void myTransform::matrixMulti(double m1[][3])
 {
 	double out[3][3];
 	for (int i = 0; i < 3; i++)
@@ -90,7 +90,7 @@ void SKTransform::matrixMulti(double m1[][3])
 			matrix[i][j] = out[i][j];
 }
 
-void SKTransform::matrixMultiVector(double v1[3], double out[3])
+void myTransform::matrixMultiVector(double v1[3], double out[3])
 {
 	for (int i = 0; i < 3; i++)
 	{

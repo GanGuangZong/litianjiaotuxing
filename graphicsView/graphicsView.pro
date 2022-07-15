@@ -12,15 +12,39 @@ DESTDIR = $$PWD/bin
 #LIBS += -L $$PWD/bin/-lEeoShapeKit
 
 SOURCES += \
+    geometry.cpp \
+    mainwindow.cpp \
+    model.cpp \
     myTransform.cpp \
     main.cpp \
+    myechelon.cpp \
+    myequalechelon.cpp \
     myitem.cpp \
+    myortechelon.cpp \
+    myparallelogram.cpp \
+    myrect.cpp \
+    myrhombus.cpp \
+    mysquare.cpp \
+    shapebuilder.cpp \
+    toolview.cpp \
     widget.cpp \
     mySize.cpp \
 
 HEADERS += \
+    geometry.h \
+    mainwindow.h \
+    model.h \
     myTransform.h \
+    myechelon.h \
+    myequalechelon.h \
     myitem.h \
+    myortechelon.h \
+    myparallelogram.h \
+    myrect.h \
+    myrhombus.h \
+    mysquare.h \
+    shapebuilder.h \
+    toolview.h \
     widget.h \
     mySize.h \
 
@@ -30,3 +54,7 @@ HEADERS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    mainwindow.ui \
+    toolview.ui
